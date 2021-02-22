@@ -14,6 +14,7 @@ string solution(string number, int k) {
             if (max < number[j]){ // max에 최대값 저장
                 max = number[j];
                 index = j; // 최대값의 위치 index에 저장
+                if (number[j] == '9') break; // 9보다 큰 수는 없으므로 예외 (추가함) 테스트케이스10 줄어듬
             }
                    
         }
