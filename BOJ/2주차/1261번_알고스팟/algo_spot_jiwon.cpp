@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <map>
+#include <cstdio>
 #include <cstring>
 
 using namespace std;
@@ -12,71 +13,44 @@ using namespace std;
 int maze[100][100];
 int N, M;  //세로, 가로
 int wall[100][100]={{0,},};
+bool visited[100][100];
 
-void BFS(int x, int y){
-    int dx[4] = {0,0,1,-1}; //상하좌우
-    int dy[4] = {1,-1,0,0};
-    
-    for(int i=0;i<4;i++){
-        if(x+dx[i] < 0 || x+dx[i] >= N || y+dy[i] < 0 || y+dy[i] >= M){
-            continue;
-        }
-        wall[x+dx[i]][y+dy[i]] = min(wall[x][y] + maze[x+dx[i]][y+dy[i]], wall[x+dx[i]][y+dy[i]]);
-    }
-}
-
-void Find(int x, int y){
-    int dx[4] = {0,0,1,-1}; //상하좌우
-    int dy[4] = {1,-1,0,0};
-    
-    if((x==0 && y==0) || (x==M-1 && y==N-1)){
+void DFS(int x, int y,int walls){
+    if(wall[x][y] <= walls)
         return;
-    }
+    wall[x][y] = walls;
     
+    if(x == M-1 && y == N-1)
+        return;
+    
+    
+    int dx[4] = {0,0,1,-1}; //상하좌우
+    int dy[4] = {1,-1,0,0};
     for(int i=0;i<4;i++){
-        if(x+dx[i] <= 0 || x+dx[i] > N || y+dy[i] <= 0 || y+dy[i] > M){
+        int new_x = x + dx[i], new_y = y + dy[i];
+        if(new_x < 0 || new_x >= N || new_y < 0 || new_y >= M || visited[new_x][new_y]){
             continue;
         }
-        wall[x][y] = min(wall[x][y],wall[x+dx[i]][y+dy[i]]+maze[x][y]);
+        visited[new_x][new_y] = true;
+        DFS(new_x,new_y,walls+maze[new_x][new_y]);
+        visited[new_x][new_y] = false;
     }
-    for(int i=0;i<N;i++){
-        for(int j=0;j<M;j++){
-            cout<<wall[i][j]<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl;
 }
+
 
 int main(){
 
     cin>>M>>N;
-    char tmp;
     for(int i=0;i<N;i++){
         for(int j=0;j<M;j++){
-            cin>>tmp;
-            maze[i][j] = tmp - '0';
+            scanf("%1d",&maze[i][j]);
             wall[i][j] = 999;
         }
     }
-    wall[0][0] = 0;
-    for(int i=0;i<N;i++){
-        for(int j=0;j<M;j++){
-            BFS(i,j);
-        }
-    }
-    for(int i=0;i<N;i++){
-        for(int j=0;j<M;j++){
-            cout<<wall[i][j]<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl<<endl;
-    for(int i=0;i<N;i++){
-        for(int j=0;j<M;j++){
-            Find(i,j);
-        }
-    }
+    
+    visited[0][0] = true;
+    DFS(0,0,0);
+    
     cout<<wall[N-1][M-1]<<endl;
 }
 
