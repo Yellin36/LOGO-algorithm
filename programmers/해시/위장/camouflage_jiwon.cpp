@@ -5,18 +5,14 @@
 using namespace std;
 
 int solution(vector<vector<string>> clothes) {
-    map<string, int> closet;  //종류 : 갯수
     int answer = 1;
+    map<string,int> combination;
     
-    for(int i =0 ;i < clothes.size();i++)
-    {
-        closet[clothes[i][1]]++;
-    }
-    for(auto m : closet)
-    {
+    for(auto v : clothes)
+        combination[v[1]]++;
+    
+    for(auto m : combination)
         answer *= m.second + 1;
-       
-    }
-   
+    
     return answer-1;
 }

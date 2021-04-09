@@ -21,6 +21,7 @@ function solution(progresses, speeds) {
             answer.push(cnt);
         }
         
+        
     }
    
 return answer;
